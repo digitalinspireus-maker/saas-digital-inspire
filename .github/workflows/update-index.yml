@@ -1,0 +1,28 @@
+name: Update index.html from ZIP
+on:
+  push:
+    paths:
+      - .github/workflows/update-index.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract corrected index.html from ZIP
+        run: |
+          unzip -o saas-netlify.zip
+          test -f index.html
+          test $(stat -c%s index.html) -gt 100000
+          ls -l index.html
+      - name: Commit corrected index.html
+        run: |
+          git config user.name "digitalinspireus-maker"
+          git config user.email "digitalinspireus-maker@users.noreply.github.com"
+          rm saas-netlify.zip
+          rm .github/workflows/update-index.yml
+          git add -A
+          git diff --cached --quiet || git commit -m "Update index.html (corrected version)"
+          git push
