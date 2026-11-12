@@ -1884,6 +1884,47 @@
       .real-ad.sq .ra-foot-tx{font-size:2.3cqw}
       .real-ad.sq .ra-foot-tx small{font-size:3.2cqw}
       .real-ad.sq .ra-cta{font-size:3.4cqw;padding:1.9cqw 4.8cqw}
+
+      /* 17) TEXTO JUSTIFICADO A AMBOS EXTREMOS
+         («alinea bien justificado a ambos extremos»): todo el texto
+         corrido de la página — párrafos de sección, tarjetas, bloques,
+         ejemplos de webs, registro y pie — va JUSTIFICADO: el borde
+         izquierdo y el derecho quedan en línea recta, a ambos
+         extremos de su columna. Con separación silábica automática
+         (el idioma de la página es español) para que en las columnas
+         estrechas (tarjetas de webs y bloques de tres) no queden
+         huecos grandes entre palabras, y la última línea de cada
+         párrafo alineada a la izquierda, como manda la justificación.
+         No se justifican los titulares, los botones, los precios, las
+         píldoras, las burbujas del chat ni las maquetas del anuncio:
+         no son texto corrido y conservan su alineación propia. */
+      .sec-head p,
+      .card p,
+      .bloque p,
+      .rasgo p,
+      .web-pie p,
+      .registro-info p,
+      .registro-form .sub,
+      .pie-legal p,
+      .hero .desc,
+      .disena-nota{
+        text-align:justify;text-justify:inter-word;
+        hyphens:auto;-webkit-hyphens:auto;
+        text-align-last:left;
+      }
+      .reglas li span,
+      .req li{
+        text-align:justify;text-justify:inter-word;
+        hyphens:auto;-webkit-hyphens:auto;
+        text-align-last:left;
+      }
+      /* Los textos que son centro por diseño se quedan al centro:
+         la microcopy de la portada y el resumen y el precio de
+         cada plan (son .card p, pero su diseño es centrado) */
+      .empieza .micro,
+      .plan .plan-resumen,
+      .plan .precio,
+      .plan h3{text-align:center;text-align-last:center}
     </style>
   </head>
   <body>
