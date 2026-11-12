@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visor de webs — varios formatos</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0e1116; color:#e8ecf1; }
+  header { position:sticky; top:0; z-index:10; background:#151a21; border-bottom:1px solid #262d38; padding:12px; }
+  header h1 { font-size:17px; margin:0 0 10px; font-weight:700; }
+  .sites { display:flex; flex-wrap:wrap; gap:8px; }
+  .sites button { background:#1f2733; color:#e8ecf1; border:1px solid #333f4f; border-radius:999px; padding:9px 14px; font-size:14px; cursor:pointer; }
+  .sites button.active { background:#c9a227; border-color:#c9a227; color:#141414; font-weight:700; }
+  .custom { display:flex; gap:8px; margin-top:10px; }
+  .custom input { flex:1; background:#0e1116; border:1px solid #333f4f; color:#e8ecf1; border-radius:8px; padding:9px 10px; font-size:14px; min-width:0; }
+  .custom button { background:#2a3442; color:#e8ecf1; border:1px solid #3a4757; border-radius:8px; padding:9px 14px; font-size:14px; cursor:pointer; }
+  main { padding:14px 12px 40px; max-width:1200px; margin:0 auto; }
+  section.frame { margin-bottom:34px; }
+  .bar { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .bar .tag { font-size:15px; font-weight:700; }
+  .bar .dim { font-size:12px; color:#9fb0c3; }
+  .bar button, .bar a { margin-left:auto; background:#1f2733; color:#e8ecf1; border:1px solid #333f4f; border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer; text-decoration:none; }
+  .bar a { margin-left:0; }
+  .wrap { background:#fff; border:1px solid #333f4f; border-radius:10px; overflow:hidden; position:relative; }
+  iframe { border:0; display:block; transform-origin: top left; background:#fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Visor de webs — varios formatos</h1>
+  <div class="sites" id="sites"></div>
+  <div class="custom">
+    <input id="customUrl" type="url" placeholder="Pega otra URL aquí…">
+    <button id="customGo">Ver</button>
+  </div>
+</header>
+<main id="main"></main>
+<script>
+  var SITES = [
+    { name: "App de diseño — SaaS", url: "https://digitalinspireus-maker.github.io/saas-digital-inspire/" },
+    { name: "Escáner", url: "https://sprightly-hamster-64fae4.netlify.app/" },
+    { name: "Terrenos y Fincas", url: "https://terrenosyfincas.com/" },
+    { name: "Amanda", url: "https://astounding-cat-5c455d.netlify.app/" }
+  ];
+  var FRAMES = [
+    { tag: "📱 Celular", w: 390, h: 844 },
+    { tag: "📲 Tablet", w: 768, h: 1024 },
+    { tag: "🖥️ Computadora", w: 1440, h: 900 }
+  ];
+  var current = SITES[0].url;
+  var sitesEl = document.getElementById('sites');
+  var mainEl = document.getElementById('main');
+
+  SITES.forEach(function(s, i){
+    var b = document.createElement('button');
+    b.textContent = s.name;
+    if (i === 0) b.className = 'active';
+    b.onclick = function(){
+      sitesEl.querySelectorAll('button').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active');
+      load(s.url);
+    };
+    sitesEl.appendChild(b);
+  });
+
+  function normalize(u){
+    u = (u || '').trim();
+    if (!u) return '';
+    if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    return u;
+  }
+  document.getElementById('customGo').onclick = function(){
+    var u = normalize(document.getElementById('customUrl').value);
+    if (!u) return;
+    sitesEl.querySelectorAll('button').forEach(function(x){ x.classList.remove('active'); });
+    load(u);
+  };
+
+  function build(){
+    mainEl.innerHTML = '';
+    FRAMES.forEach(function(f){
+      var sec = document.createElement('section'); sec.className = 'frame';
+      var bar = document.createElement('div'); bar.className = 'bar';
+      var tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = f.tag;
+      var dim = document.createElement('span'); dim.className = 'dim'; dim.textContent = f.w + ' × ' + f.h + ' px';
+      var rel = document.createElement('button'); rel.textContent = '↻ Recargar';
+      var open = document.createElement('a'); open.textContent = 'Abrir en vivo'; open.target = '_blank'; open.rel = 'noopener';
+      bar.appendChild(tag); bar.appendChild(dim); bar.appendChild(rel); bar.appendChild(open);
+      var wrap = document.createElement('div'); wrap.className = 'wrap';
+      var ifr = document.createElement('iframe');
+      ifr.setAttribute('title', f.tag);
+      ifr.dataset.w = f.w; ifr.dataset.h = f.h;
+      wrap.appendChild(ifr);
+      sec.appendChild(bar); sec.appendChild(wrap);
+      mainEl.appendChild(sec);
+      rel.onclick = function(){ ifr.src = current; };
+      open.href = current;
+      ifr._open = open;
+    });
+    fit();
+  }
+  function fit(){
+    mainEl.querySelectorAll('iframe').forEach(function(ifr){
+      var w = +ifr.dataset.w, h = +ifr.dataset.h;
+      var avail = ifr.parentElement.clientWidth || document.documentElement.clientWidth;
+      var s = Math.min(1, avail / w);
+      ifr.style.width = w + 'px';
+      ifr.style.height = h + 'px';
+      ifr.style.transform = 'scale(' + s + ')';
+      ifr.parentElement.style.height = (h * s) + 'px';
+    });
+  }
+  function load(u){
+    current = u;
+    mainEl.querySelectorAll('iframe').forEach(function(ifr){
+      ifr.src = u;
+      if (ifr._open) ifr._open.href = u;
+    });
+    fit();
+  }
+  window.addEventListener('resize', fit);
+  build();
+  load(current);
+</script>
+</body>
+</html>
