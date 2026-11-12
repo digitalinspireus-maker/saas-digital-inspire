@@ -94,7 +94,7 @@
       wrap.appendChild(ifr);
       sec.appendChild(bar); sec.appendChild(wrap);
       mainEl.appendChild(sec);
-      rel.onclick = function(){ ifr.src = current; };
+      rel.onclick = function(){ ifr.src = current + (current.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Date.now(); };
       open.href = current;
       ifr._open = open;
     });
@@ -113,8 +113,9 @@
   }
   function load(u){
     current = u;
+    var fresh = u + (u.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Date.now();
     mainEl.querySelectorAll('iframe').forEach(function(ifr){
-      ifr.src = u;
+      ifr.src = fresh;
       if (ifr._open) ifr._open.href = u;
     });
     fit();
