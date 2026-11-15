@@ -2199,6 +2199,59 @@
         .hc-atrae{order:4}
         .hc-vinetas{order:5;gap:.32rem;line-height:1.37}
       }
+
+      /* ===== Regla FINAL del dueño (2026-11-15): CERO SOLAPE EN EL
+         CARRUSEL — texto y foto en zonas totalmente separadas =====
+         «Ni arriba de nada de la foto ni celular ni nada»: no basta
+         con sacar el botón — las viñetas llegaban a tocar el pelo de
+         las láminas 1 y 2 y quedaban detrás de los celulares, porque
+         las fotos vivían en posición absoluta apoyadas abajo a la
+         derecha, DEBAJO del bloque de texto.
+         Reordenación por construcción, solo en el celular:
+         - Cada lámina pasa a ser una COLUMNA flex: arriba el bloque
+           de texto completo (título, subtítulo, botón, «Atrae
+           clientes» y viñetas) y debajo, en su propia franja, la foto.
+           Ningún elemento de texto es absoluto ni flota sobre la foto.
+         - Todas las fotos SALEN de posición absoluta y pasan al flujo
+           de la columna, en una franja propia de 19rem de alto, con
+           «contain» y centradas: entran COMPLETAS — cara, pelo, los
+           dos brazos y el celular que la persona sostiene — sin
+           recorte y sin nada encima, ni siquiera el fundido que la
+           lámina 2 llevaba sobre la parte alta de su foto.
+         - Las viñetas dejan su ancho estrecho (15.5em, pensado para
+           esquivar la foto de la derecha) y corren a todo el ancho de
+           su zona: al ya no compartir franja con la foto, el texto se
+           lee completo sin bajar sobre ninguna cara.
+         - La pista deja su alto fijo: cada lámina mide lo que suman
+           su texto y su foto, sin que una zona invada la otra.
+         No se toca ni una letra, ni una foto, ni el escritorio. */
+      @media (max-width:820px){
+        .hc-track{height:auto;align-items:stretch}
+        .hc-slide{
+          display:flex;flex-direction:column;height:auto;min-height:0;
+        }
+        .hc-texto{
+          flex:0 0 auto;width:100%;max-width:100%;
+          padding-bottom:.85rem;
+        }
+        .hc-vinetas{max-width:none;width:100%}
+        .hc-slide img,
+        .hc-track .hc-slide .hc-mujer,
+        .hc-track .hc-slide img.hc-foto-cut,
+        .hc-track .hc-slide img.hc-foto-band,
+        .hc-track .hc-slide:nth-child(1) img,
+        .hc-track .hc-slide:nth-child(2) img.hc-foto-band,
+        .hc-track .hc-slide:nth-child(3) img.hc-foto-cut,
+        .hc-track .hc-slide:nth-child(4) img.hc-foto-cut{
+          position:relative;inset:auto;left:auto;right:auto;top:auto;bottom:auto;
+          order:2;flex:0 0 auto;display:block;
+          width:100%;max-width:100%;
+          height:19rem;max-height:19rem;
+          margin:0 auto;
+          object-fit:contain;object-position:center bottom;
+          -webkit-mask-image:none;mask-image:none;
+        }
+      }
     </style>
   </head>
   <body>
