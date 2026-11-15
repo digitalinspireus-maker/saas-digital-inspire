@@ -2111,6 +2111,46 @@
       }
       /* Webs: el diseño original COMPLETO dentro de la caja uniforme */
       .home-card .tpl-img{object-fit:contain;object-position:center;background:#fff}
+
+      /* ===== Corrección del dueño (2026-11-15): las fotos 2, 3 y 4 del
+         home se cortan; la última deja mucho espacio azul encima =====
+         Causas medidas sobre los archivos:
+         - Lámina 2 (la chica): su foto es VERTICAL (1025×1180) y vivía
+           como franja de solo el 43% del alto con «cover» y encuadre al
+           24% — el navegador descartaba ~40% de la foto (moño, delantal
+           y mesa fuera). Ahora la franja crece al 56% del alto y el
+           encuadre sube al 12%: el recorte cae casi todo en el borde
+           inferior de la mesa y entran completos la cara, el celular
+           con el anuncio y el delantal; el fundido superior baja del
+           24% al 14% para no comerse el moño.
+         - Lámina 3 (el hombre): su figura recortada iba pequeña
+           (66% × 56%) en la esquina. Ahora va al 76% de ancho y hasta
+           el 66% de alto, siempre en «contain» y apoyada abajo a la
+           derecha: entra ENTERA — cara, los dos celulares y las dos
+           manos — sin recorte alguno.
+         - Lámina 4 (la peluquera): su archivo trae a la persona solo
+           en el 72% inferior y el 72% central del lienzo (el resto es
+           transparencia), así que al mostrarla pequeña ese vacío se
+           sumaba al azul de la lámina y quedaba «mucho espacio encima».
+           Su figura va más grande (88% de ancho, hasta el 72% de
+           alto, «contain», abajo a la derecha): la persona crece en la
+           misma proporción, su celular levantado sube y el hueco azul
+           sobre ella se cierra, sin cortar nada del recorte. */
+      @media (max-width:820px){
+        .hc-track .hc-slide:nth-child(2) img.hc-foto-band{
+          height:56%;object-position:center 12%;
+          -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%);
+          mask-image:linear-gradient(180deg,transparent 0,#000 14%);
+        }
+        .hc-track .hc-slide:nth-child(3) img.hc-foto-cut{
+          width:76%;max-height:66%;
+          object-fit:contain;object-position:bottom right;
+        }
+        .hc-track .hc-slide:nth-child(4) img.hc-foto-cut{
+          width:88%;max-height:72%;
+          object-fit:contain;object-position:bottom right;
+        }
+      }
     </style>
   </head>
   <body>
