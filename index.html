@@ -2252,6 +2252,65 @@
           -webkit-mask-image:none;mask-image:none;
         }
       }
+
+      /* ===== Corrección del dueño (2026-11-15, segunda): la foto vuelve
+         GRANDE y los textos se cortan a DOS líneas =====
+         «No es achicar la imagen, sino cortar los textos a dos lineas,
+         pegar mas la chica al borde. No achicar imagen.» La v40 dejó
+         cada foto en una franja fija de 19rem y se veía achicada.
+         Ahora, solo en el celular:
+         - La lámina recupera su alto grande de antes y sigue en dos
+           zonas en columna: arriba el bloque de texto y debajo la
+           franja de la foto, que ocupa TODO el alto que el texto deja
+           libre (flex), no una franja fija.
+         - Cada texto se corta a MÁXIMO DOS LÍNEAS (titular,
+           subtítulo, «Atrae clientes» y cada viñeta): el bloque queda
+           compacto en su propia zona y nada baja sobre la foto. El
+           titular corre a todo el ancho de su zona para que sus dos
+           líneas quepan sin puntos suspensivos.
+         - La persona va PEGADA AL BORDE de su franja, como en el
+           diseño original: las figuras recortadas (mujer, hombre y
+           peluquera) se apoyan en la esquina inferior derecha,
+           enteras en «contain»; la chica llena su franja de borde a
+           borde en «cover» con el encuadre al 12% ya aprobado.
+         - FOCO DE LAS FOTOS: la cara y el celular que la persona
+           sostiene quedan COMPLETOS y visibles en las 4 láminas —
+           con «contain» nada se recorta, y en la chica el recorte
+           del «cover» cae en el cuerpo y el borde inferior, nunca
+           en la cara ni en el celular.
+         - La regla sigue intacta: texto y foto en zonas separadas;
+           ni el botón ni ningún texto encima de la foto, de la cara
+           ni del celular. El escritorio no se toca. */
+      @media (max-width:820px){
+        .hc-track{height:min(188vw,calc(100svh - 144px))}
+        .hc-slide{height:100%}
+        .hc-texto{padding-top:1.15rem;padding-bottom:.7rem}
+        .hc-titulo{max-width:100%}
+        .hc-titulo,.hc-sub,.hc-atrae,.hc-vinetas li{
+          display:-webkit-box;-webkit-box-orient:vertical;
+          -webkit-line-clamp:2;line-clamp:2;overflow:hidden;
+        }
+        .hc-track .hc-slide img.hc-mujer,
+        .hc-track .hc-slide img.hc-foto-cut,
+        .hc-track .hc-slide img.hc-foto-band,
+        .hc-track .hc-slide:nth-child(2) img.hc-foto-band,
+        .hc-track .hc-slide:nth-child(3) img.hc-foto-cut,
+        .hc-track .hc-slide:nth-child(4) img.hc-foto-cut{
+          position:relative;flex:1 1 0;min-height:0;
+          width:100%;max-width:100%;height:auto;max-height:none;
+          margin:0;
+        }
+        .hc-track .hc-slide img.hc-mujer,
+        .hc-track .hc-slide img.hc-foto-cut,
+        .hc-track .hc-slide:nth-child(3) img.hc-foto-cut,
+        .hc-track .hc-slide:nth-child(4) img.hc-foto-cut{
+          object-fit:contain;object-position:right bottom;
+        }
+        .hc-track .hc-slide img.hc-foto-band,
+        .hc-track .hc-slide:nth-child(2) img.hc-foto-band{
+          object-fit:cover;object-position:center 12%;
+        }
+      }
     </style>
   </head>
   <body>
