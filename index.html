@@ -2441,6 +2441,32 @@
           -webkit-mask-image:none;mask-image:none;
         }
       }
+
+      /* ===== Botones flotantes fuera del carrusel (2026-11-15) =====
+         Orden del dueño: los dos botones flotantes del sitio — el de
+         ayuda color crema abajo a la izquierda (.ayuda-btn) y el de
+         chat negro con distintivo «1» abajo a la derecha (.chat-btn) —
+         NO quedan encima del carrusel del home. Mientras el carrusel
+         está visible en pantalla, ambos se ocultan por completo (sin
+         opacidad, sin visibilidad y sin recibir clics, ver el
+         IntersectionObserver al final del script); al salir el
+         carrusel de pantalla vuelven a aparecer y funcionan igual
+         en el resto de la página. El panel del chat sigue la misma
+         regla para que nada del chat quede sobre las fotos. Los
+         botones no se eliminan ni se toca su función. */
+      .ayuda-btn,.chat-btn,.chat-panel{
+        transition:opacity .28s ease,visibility .28s ease;
+      }
+      .ayuda-btn.oculto-carrusel,
+      .chat-btn.oculto-carrusel,
+      .chat-panel.oculto-carrusel{
+        opacity:0 !important;
+        visibility:hidden !important;
+        pointer-events:none !important;
+      }
+      @media (prefers-reduced-motion: reduce){
+        .ayuda-btn,.chat-btn,.chat-panel{transition:none}
+      }
     </style>
   </head>
   <body>
@@ -3485,6 +3511,32 @@
             });
           });
           hcActivo();
+        }
+
+        /* ---------- Botones flotantes: ocultos sobre el carrusel ---------- */
+        var carruselEl = document.querySelector('.hero-carrusel');
+        if (carruselEl) {
+          var flotantes = [$('ayudaBtn'), chatBtn, chatPanel].filter(function (el) { return !!el; });
+          function fijarFlotantes(carruselVisible) {
+            flotantes.forEach(function (el) {
+              el.classList.toggle('oculto-carrusel', !!carruselVisible);
+            });
+          }
+          if ('IntersectionObserver' in window) {
+            var obsFlotantes = new IntersectionObserver(function (entries) {
+              entries.forEach(function (en) { fijarFlotantes(en.isIntersecting); });
+            }, { threshold: 0 });
+            obsFlotantes.observe(carruselEl);
+          } else {
+            var revisarFlotantes = function () {
+              var r = carruselEl.getBoundingClientRect();
+              var visible = r.bottom > 0 && r.top < (window.innerHeight || document.documentElement.clientHeight);
+              fijarFlotantes(visible);
+            };
+            window.addEventListener('scroll', revisarFlotantes, { passive: true });
+            window.addEventListener('resize', revisarFlotantes);
+            revisarFlotantes();
+          }
         }
       })();
     </script>
