@@ -2171,6 +2171,34 @@
           object-fit:contain;object-position:bottom right;
         }
       }
+
+      /* ===== Regla del dueño (2026-11-15): NINGÚN BOTÓN TAPA LA FOTO =====
+         «Ningun boton puede tapar la foto»: el botón «REGISTRATE AQUI»
+         cerraba cada lámina ENCIMA de la persona — en la 3 tapaba el
+         hombro derecho del hombre y su celular levantado; en la 1, el
+         hombro y el pelo de la mujer. El botón SALE de la franja de la
+         foto en las 4 láminas: sube junto al texto, justo después del
+         subtítulo «Diseña, publica, vende», sobre el degradado libre —
+         ahí ninguna foto llega (la figura más alta, la mujer, arranca
+         a los ~279px de la lámina; el botón reubicado termina a los
+         ~185px). Se logra reordenando el bloque de texto (flex), sin
+         tocar ni una letra.
+         Para que las viñetas NO bajen sobre las caras al hacerle sitio
+         al botón, los espacios internos del bloque se aprietan lo justo
+         (aire superior, márgenes del titular y del subtítulo, ritmo de
+         las viñetas): las viñetas quedan en el mismo sitio de siempre.
+         Las fotos NO se achican ni se mueven; el escritorio no cambia. */
+      @media (max-width:820px){
+        .hc-texto{
+          display:flex;flex-direction:column;align-items:flex-start;
+          padding-top:1.5rem;
+        }
+        .hc-titulo{order:1;margin-bottom:.5rem}
+        .hc-sub{order:2;margin-bottom:.5rem}
+        .hc-cta{order:3;margin:.45rem 0 .6rem}
+        .hc-atrae{order:4}
+        .hc-vinetas{order:5;gap:.32rem;line-height:1.37}
+      }
     </style>
   </head>
   <body>
